@@ -43,8 +43,8 @@ class LoginTestSnState extends State<LoginScreen> {
   Future<void> signIn() async {
     try {
       final user = await loginService(UserModel(
-        email: "admin@admin.com",
-        password: "password",
+        email: emailController.text,
+        password: passwordController.text,
       ));
       await storage.write(key: 'access_token', value: user.access_token);
       await storage.write(key: 'token_type', value: user.token_type);
