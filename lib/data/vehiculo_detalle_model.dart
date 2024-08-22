@@ -6,6 +6,7 @@ class VehiculoDetalleModel {
   late int? detalle_id;
   late bool? estado;
   late double? valor;
+  late String? descripcion;
   late DateTime? createdAt;
   late DateTime? updatedAt;
 
@@ -15,6 +16,7 @@ class VehiculoDetalleModel {
      this.detalle_id,
      this.estado,
      this.valor,
+     this.descripcion,
      this.createdAt,
      this.updatedAt,
   });
@@ -26,6 +28,7 @@ class VehiculoDetalleModel {
       detalle_id: json['detalle_id'],
       estado: json['estado'] == 1 ? true : false,
       valor: json['valor'],      
+      descripcion: json['descripcion'],
       createdAt: DateTime.parse(json['created_at']),
       updatedAt: DateTime.parse(json['updated_at']),
     );
@@ -38,6 +41,7 @@ class VehiculoDetalleModel {
       'detalle_id': detalle_id,
       'estado': estado == true ? 1 : 0,
       'valor': valor,
+      'descripcion': descripcion,
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
     };
