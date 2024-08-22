@@ -84,7 +84,7 @@ class LoginTestSnState extends State<LoginScreen> {
                     children: [
                       const SizedBox(height: 70),
                       const Text(
-                        "Login",
+                        "Inicia Sesión",
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
@@ -103,7 +103,7 @@ class LoginTestSnState extends State<LoginScreen> {
                                   controller: emailController,
                                   decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
-                                      labelText: "Email"),
+                                      labelText: "Correo electrónico"),
                                 ),
                               ),
                               Padding(
@@ -114,7 +114,7 @@ class LoginTestSnState extends State<LoginScreen> {
                                   obscureText: true,
                                   decoration: const InputDecoration(
                                       border: OutlineInputBorder(),
-                                      labelText: "Password"),
+                                      labelText: "Contraseña"),
                                 ),
                               ),
                               const SizedBox(height: 20),
@@ -135,7 +135,7 @@ class LoginTestSnState extends State<LoginScreen> {
                                         );
                                       }
                                     },
-                                    child: const Text('Submit'),
+                                    child: const Text('Ingresar'),
                                   ),
                                 ),
                               ),
