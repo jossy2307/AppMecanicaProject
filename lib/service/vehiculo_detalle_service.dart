@@ -19,7 +19,7 @@ Future<VehiculoDetalleModel> createVehiculosDetallesService(
     },
     body: json.encode(vehiculoDetalle.toJson()),
   );
-
+  print(response.toString());
   if (response.statusCode == 201) {
     final responseJson = json.decode(response.body);
     return VehiculoDetalleModel.fromJson(

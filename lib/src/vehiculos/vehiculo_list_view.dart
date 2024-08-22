@@ -16,42 +16,114 @@ class _VehiculoListViewState extends State<VehiculoListView> {
   @override
   void initState() {
     super.initState();
-    fetchVehiculos().then((value) => setState(() {
-          items = value;
-        }));
+    _fetchVehiculos(); // Llama a la función para obtener los vehículos al inicio
   }
 
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Listado de Vehiculos'),
-      ),
-      body: items.isEmpty
-          ? const Center(
-              child: Text('No hay vehículos disponibles.'),
-            )
-          : ListView.builder(
-              restorationId: 'sampleItemListView',
-              itemCount: items.length,
-              itemBuilder: (BuildContext context, int index) {
-                final item = items[index];
+  Future<void> _fetchVehiculos() async {
+    try {
+      List<VehiculoModel> nuevosVehiculos = await fetchVehiculos();
+      setState(() {
+        items = nuevosVehiculos;
+      });
+      if (nuevosVehiculos.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No hay vehículos disponibles.')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error al actualizar lista: $e')),
+      );
+    }
+  }
 
-                return ListTile(
-                  title: Text(' ${item.placa} '),
-                  leading: const CircleAvatar(
-                    // Display the Flutter Logo image asset.
-                    foregroundImage:
-                        AssetImage('assets/images/flutter_logo.png'),
+  Future<bool> _showLogoutConfirmationDialog(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Confirmación de Cierre de Sesión'),
+              content: const Text('¿Estás seguro de que deseas cerrar sesión?'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(false); // Cierra el diálogo y retorna false
+                  },
+                  child: const Text('Cancelar'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pop(true); // Cierra el diálogo y retorna true
+                  },
+                  child: const Text('Cerrar Sesión'),
+                ),
+              ],
+            );
+          },
+        ) ??
+        false; // Retorna false si el usuario cierra el diálogo sin seleccionar una opción
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        bool shouldLogout = await _showLogoutConfirmationDialog(context);
+        if (shouldLogout) {
+          // Redirige al login si el usuario quiere cerrar sesión
+          Navigator.of(context).pushReplacementNamed('/login');
+          return true;
+        } else {
+          // No hace nada y permanece en la pantalla
+          return false;
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Listado de Vehículos'),
+        ),
+        body: RefreshIndicator(
+          onRefresh: _fetchVehiculos, // Función que se llama al refrescar
+          child: items.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('No hay vehículos disponibles.'),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _fetchVehiculos,
+                        child: const Text('Reintentar'),
+                      ),
+                    ],
                   ),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            VehiculoDetailView(vehiculo: item)),
-                  ),
-                );
-              },
-            ),
+                )
+              : ListView.builder(
+                  restorationId: 'sampleItemListView',
+                  itemCount: items.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final item = items[index];
+
+                    return ListTile(
+                      title: Text(' ${item.placa} '),
+                      leading: const CircleAvatar(
+                        // Display the Flutter Logo image asset.
+                        foregroundImage:
+                            AssetImage('assets/images/flutter_logo.png'),
+                      ),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                VehiculoDetailView(vehiculo: item)),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ),
     );
   }
 }
