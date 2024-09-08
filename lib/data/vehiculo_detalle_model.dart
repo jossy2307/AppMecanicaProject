@@ -5,7 +5,7 @@ class VehiculoDetalleModel {
   // ignore: non_constant_identifier_names
   late int? detalle_id;
   late bool? estado;
-  late double? valor;
+  late int? valor;
   late String? descripcion;
   late DateTime? createdAt;
   late DateTime? updatedAt;

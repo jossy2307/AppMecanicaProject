@@ -20,22 +20,30 @@ class _VehiculoListViewState extends State<VehiculoListView> {
   }
 
   Future<void> _fetchVehiculos() async {
-    try {
-      List<VehiculoModel> nuevosVehiculos = await fetchVehiculos();
-      setState(() {
-        items = nuevosVehiculos;
-      });
-      if (nuevosVehiculos.isEmpty) {
+  try {
+    List<VehiculoModel> nuevosVehiculos = await fetchVehiculos();
+    if (!mounted) return;  // Verifica si el widget está montado
+
+    setState(() {
+      items = nuevosVehiculos;
+    });
+
+    if (nuevosVehiculos.isEmpty) {
+      if (mounted) {  // Verifica si el widget está montado
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('No hay vehículos disponibles.')),
         );
       }
-    } catch (e) {
+    }
+  } catch (e) {
+    if (mounted) {  // Verifica si el widget está montado
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error al actualizar lista: $e')),
       );
     }
   }
+}
+
 
   Future<bool> _showLogoutConfirmationDialog(BuildContext context) async {
     return await showDialog<bool>(

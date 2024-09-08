@@ -17,7 +17,7 @@ Future<UserModel> loginService(UserModel vehiculoDetalle) async {
     final responseJson = json.decode(response.body);
     return UserModel.fromJson(responseJson); // Asegúrate de tener un método fromJson en tu modelo
   } else {
-    throw Exception('Failed to create vehiculo detalle');
+    throw Exception('Error al crear el detalle del vehículo');
   }
 }
  
